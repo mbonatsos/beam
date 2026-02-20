@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beam Launcher</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="page-utilities utility-actions" aria-label="Utility actions">
+    <button id="manageAppsBtn" type="button" aria-label="Manage apps">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h8"></path>
+        <circle cx="15.5" cy="7" r="2"></circle>
+        <path d="M20 7h-2.5"></path>
+        <path d="M20 12h-8"></path>
+        <circle cx="8.5" cy="12" r="2"></circle>
+        <path d="M4 12h2.5"></path>
+        <path d="M4 17h8"></path>
+        <circle cx="15.5" cy="17" r="2"></circle>
+        <path d="M20 17h-2.5"></path>
+      </svg>
+    </button>
+    <button id="themeToggle" type="button" aria-label="Switch theme"></button>
+  </div>
+  <div class="brand-mark page-brand" aria-label="Beam Launcher">
+    <span class="brand-glyph" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <defs>
+          <linearGradient id="beamLogoGradient" x1="3" y1="4" x2="21" y2="20" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#66e7ff"></stop>
+            <stop offset="30%" stop-color="#8f7bff"></stop>
+            <stop offset="58%" stop-color="#ff6bd6"></stop>
+            <stop offset="100%" stop-color="#ffd36a"></stop>
+          </linearGradient>
+        </defs>
+        <path d="M5 17.5 12.6 6.2h5.8L10.8 17.5z" stroke="url(#beamLogoGradient)"></path>
+        <path d="M14.2 6.2h4.2" stroke="url(#beamLogoGradient)"></path>
+        <path d="M4.8 17.5h4.4" stroke="url(#beamLogoGradient)"></path>
+      </svg>
+    </span>
+    <span class="brand-name">Beam</span>
+  </div>
+  <main class="spotlight" role="application" aria-label="App Launcher">
+    <div class="search-row">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+      </svg>
+      <input
+        id="query"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder=""
+        aria-label="Search apps"
+      />
+      <span id="queryInlineHint" class="query-inline-hint" aria-live="polite"></span>
+    </div>
+    <div id="queryHint" class="search-helper" aria-live="polite"></div>
+    <ul id="results" aria-label="Search Results"></ul>
+  </main>
+  <div id="shortcutBar" class="shortcut-bar page-shortcuts" aria-label="Mouse shortcuts"></div>
+
+  <div id="managerOverlay" class="manager-overlay" hidden>
+    <section class="manager-panel" role="dialog" aria-modal="true" aria-labelledby="managerTitle">
+      <header class="manager-header">
+        <h2 id="managerTitle">Manage Apps</h2>
+        <button id="managerCloseBtn" type="button" class="manager-close" aria-label="Close app manager">Close</button>
+      </header>
+      <div class="manager-tabs" role="tablist" aria-label="Manage app sections">
+        <button id="managerTabAppsBtn" type="button" class="manager-tab active" role="tab" aria-selected="true">Apps</button>
+        <button id="managerTabShortcutsBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Shortcuts</button>
+        <button id="managerTabPreferencesBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Preferences</button>
+        <button id="managerTabSearchBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Search Engines</button>
+        <button id="managerTabBackupBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Backup</button>
+      </div>
+      <section id="managerAppsView" class="manager-view">
+        <form id="managerForm" class="manager-form">
+          <input id="managerEditIndex" type="hidden" value="" />
+          <div id="managerEditStatus" class="manager-edit-status" hidden></div>
+          <label>
+            Name
+            <input id="managerName" type="text" required />
+          </label>
+          <label>
+            URL
+            <input id="managerUrl" type="text" inputmode="url" required />
+          </label>
+          <label>
+            Tags (comma separated)
+            <input id="managerTags" type="text" placeholder="production, prod, prd" />
+          </label>
+          <button id="managerActionToggleBtn" type="button" class="manager-option-toggle" aria-expanded="false">Expand options</button>
+          <div id="managerActionSection" hidden>
+            <label>
+              Action append URL (optional)
+              <input id="managerAppendUrl" type="text" placeholder="/customers/{customerid}" />
+            </label>
+          </div>
+        </form>
+        <ul id="managerList" class="manager-list" aria-label="Managed apps"></ul>
+        <div class="manager-view-footer">
+          <button id="managerSaveBtn" type="submit" form="managerForm">Save</button>
+        </div>
+      </section>
+      <section id="managerShortcutsView" class="manager-view" hidden>
+        <form id="managerShortcutForm" class="manager-form">
+          <input id="managerShortcutEditIndex" type="hidden" value="" />
+          <div id="managerShortcutEditStatus" class="manager-edit-status" hidden></div>
+          <label>
+            Name
+            <input id="managerShortcutName" type="text" placeholder="Gmail" />
+          </label>
+          <label>
+            URL
+            <input id="managerShortcutUrl" type="text" inputmode="url" required />
+          </label>
+          <label>
+            Icon URL (optional)
+            <input id="managerShortcutIconUrl" type="text" inputmode="url" placeholder="https://.../icon.png" />
+          </label>
+        </form>
+        <ul id="managerShortcutList" class="manager-list" aria-label="Managed shortcuts"></ul>
+        <div class="manager-view-footer">
+          <button id="managerShortcutSaveBtn" type="submit" form="managerShortcutForm">Save</button>
+        </div>
+      </section>
+      <section id="managerPreferencesView" class="manager-view manager-backup-view" hidden>
+        <div class="manager-settings">
+          <label class="manager-setting-item">
+            <input id="managerShowHintToggle" type="checkbox" />
+            <span>Show search hint under search bar</span>
+          </label>
+          <label class="manager-setting-item">
+            <input id="managerShowShortcutsToggle" type="checkbox" />
+            <span>Show mouse shortcuts below search</span>
+          </label>
+          <label class="manager-setting-field" for="managerMinCharsInput">
+            <span>Minimum characters before search starts</span>
+            <input id="managerMinCharsInput" type="number" min="1" max="10" step="1" value="3" />
+          </label>
+          <p class="manager-setting-note">Suggested value: 3</p>
+          <p class="manager-setting-note">
+            Recommendation: lowering this value can negatively affect performance.
+          </p>
+        </div>
+      </section>
+      <section id="managerSearchView" class="manager-view manager-backup-view" hidden>
+        <div class="manager-settings">
+          <label class="manager-setting-item manager-setting-item-service">
+            <input id="managerShowGoogleSearchToggle" type="checkbox" />
+            <span class="manager-setting-service-label">
+              <img
+                class="manager-setting-service-icon"
+                src="https://www.google.com/favicon.ico"
+                alt=""
+                width="16"
+                height="16"
+                loading="lazy"
+              />
+              <span>Show Google search result section</span>
+            </span>
+          </label>
+          <label class="manager-setting-item manager-setting-item-service">
+            <input id="managerShowChatGptSearchToggle" type="checkbox" />
+            <span class="manager-setting-service-label">
+              <img
+                class="manager-setting-service-icon"
+                src="https://chatgpt.com/favicon.ico"
+                alt=""
+                width="16"
+                height="16"
+                loading="lazy"
+              />
+              <span>Show ChatGPT search result section</span>
+            </span>
+          </label>
+        </div>
+      </section>
+      <section id="managerBackupView" class="manager-view manager-backup-view" hidden>
+        <p class="manager-backup-copy">Export your local setup to JSON, or import/restore it later.</p>
+        <div class="manager-actions manager-backup-actions">
+          <button id="managerExportBtn" type="button">Export JSON</button>
+          <button id="managerImportBtn" type="button">Import JSON</button>
+          <button id="managerImportChromeBookmarksBtn" type="button">Import Chrome Bookmarks</button>
+          <button id="managerResetBtn" type="button">Reset local changes</button>
+        </div>
+      </section>
+      <input id="managerImportInput" type="file" accept="application/json,.json" hidden />
+      <input id="managerImportChromeBookmarksInput" type="file" accept="text/html,.html,.htm,application/json,.json" hidden />
+    </section>
+  </div>
+  <div id="bookmarkDialogOverlay" class="bookmark-dialog-overlay" hidden>
+    <section class="bookmark-dialog" role="dialog" aria-modal="true" aria-labelledby="bookmarkDialogTitle">
+      <h3 id="bookmarkDialogTitle">Import Chrome Bookmarks</h3>
+      <p id="bookmarkDialogMessage"></p>
+      <div id="bookmarkDialogSections" class="bookmark-dialog-sections" hidden></div>
+      <div class="bookmark-dialog-actions">
+        <button id="bookmarkDialogCancelBtn" type="button">Cancel</button>
+        <button id="bookmarkDialogConfirmBtn" type="button">OK</button>
+      </div>
+    </section>
+  </div>
+  <section id="themeEasterEgg" class="theme-easter-egg" hidden aria-live="polite">
+    <img id="themeEasterEggImage" src="" alt="Beam easter egg" />
+  </section>
+
+  <script src="./config.js"></script>
+  <script src="./apps.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

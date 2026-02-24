@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="page-utilities utility-actions" aria-label="Utility actions">
-    <button id="manageAppsBtn" type="button" aria-label="Manage apps">
+    <button id="manageAppsBtn" type="button" aria-label="Open Beam settings">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 7h8"></path>
         <circle cx="15.5" cy="7" r="2"></circle>
@@ -66,129 +66,261 @@
   <div id="managerOverlay" class="manager-overlay" hidden>
     <section class="manager-panel" role="dialog" aria-modal="true" aria-labelledby="managerTitle">
       <header class="manager-header">
-        <h2 id="managerTitle">Manage Apps</h2>
-        <button id="managerCloseBtn" type="button" class="manager-close" aria-label="Close app manager">Close</button>
+        <div class="manager-header-main">
+          <h2 id="managerTitle">Beam Settings</h2>
+          <p class="manager-header-copy">
+            Configure apps, quick links, search behavior, and local data from one place.
+          </p>
+        </div>
+        <div class="manager-header-actions">
+          <button id="managerCloseBtn" type="button" class="manager-close" aria-label="Close settings">Close</button>
+        </div>
       </header>
-      <div class="manager-tabs" role="tablist" aria-label="Manage app sections">
-        <button id="managerTabAppsBtn" type="button" class="manager-tab active" role="tab" aria-selected="true">Apps</button>
-        <button id="managerTabShortcutsBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Shortcuts</button>
-        <button id="managerTabPreferencesBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Preferences</button>
-        <button id="managerTabSearchBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Search Engines</button>
-        <button id="managerTabBackupBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Backup</button>
+      <div class="manager-tabs-wrap">
+        <div class="manager-tabs" role="tablist" aria-label="Settings sections">
+          <button id="managerTabAppsBtn" type="button" class="manager-tab active" role="tab" aria-selected="true">Apps</button>
+          <button id="managerTabShortcutsBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Quick Links</button>
+          <button id="managerTabPreferencesBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Experience</button>
+          <button id="managerTabSearchBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Web Search</button>
+          <button id="managerTabBackupBtn" type="button" class="manager-tab" role="tab" aria-selected="false">Data</button>
+        </div>
       </div>
-      <section id="managerAppsView" class="manager-view">
-        <form id="managerForm" class="manager-form">
+      <section id="managerAppsView" class="manager-view manager-apps-view">
+        <div class="manager-apps-header">
+          <h3>App Library</h3>
+          <p class="manager-apps-copy">
+            Add and manage searchable apps. Use tags for faster filtering, and optional action mode for dynamic paths.
+          </p>
+        </div>
+        <form id="managerForm" class="manager-form manager-apps-form">
           <input id="managerEditIndex" type="hidden" value="" />
           <div id="managerEditStatus" class="manager-edit-status" hidden></div>
           <label>
-            Name
-            <input id="managerName" type="text" required />
+            App name
+            <input id="managerName" type="text" placeholder="Jira" required />
           </label>
           <label>
-            URL
-            <input id="managerUrl" type="text" inputmode="url" required />
+            Base URL
+            <input id="managerUrl" type="text" inputmode="url" placeholder="https://your-app.example.com" required />
           </label>
           <label>
             Tags (comma separated)
-            <input id="managerTags" type="text" placeholder="production, prod, prd" />
+            <input id="managerTags" type="text" placeholder="billing, production, internal" />
           </label>
-          <button id="managerActionToggleBtn" type="button" class="manager-option-toggle" aria-expanded="false">Expand options</button>
+          <button id="managerActionToggleBtn" type="button" class="manager-option-toggle" aria-expanded="false">Show action mode options</button>
           <div id="managerActionSection" hidden>
             <label>
-              Action append URL (optional)
+              Action mode URL suffix (optional)
               <input id="managerAppendUrl" type="text" placeholder="/customers/{customerid}" />
             </label>
+            <p class="manager-apps-action-hint">Use `{customerid}` style placeholders to append dynamic values from search input.</p>
           </div>
         </form>
+        <p class="manager-apps-hint">Need to add many apps quickly? Use Data > Import from Chrome.</p>
         <ul id="managerList" class="manager-list" aria-label="Managed apps"></ul>
         <div class="manager-view-footer">
-          <button id="managerSaveBtn" type="submit" form="managerForm">Save</button>
+          <button id="managerSaveBtn" type="submit" form="managerForm">Save App</button>
         </div>
       </section>
-      <section id="managerShortcutsView" class="manager-view" hidden>
-        <form id="managerShortcutForm" class="manager-form">
+      <section id="managerShortcutsView" class="manager-view manager-shortcuts-view" hidden>
+        <div class="manager-shortcuts-header">
+          <h3>Quick Links</h3>
+          <p class="manager-shortcuts-copy">
+            Add one-click links that always stay visible below search. Use them for tools you open multiple times a day.
+          </p>
+        </div>
+        <form id="managerShortcutForm" class="manager-form manager-shortcuts-form">
           <input id="managerShortcutEditIndex" type="hidden" value="" />
           <div id="managerShortcutEditStatus" class="manager-edit-status" hidden></div>
           <label>
-            Name
+            Label (optional)
             <input id="managerShortcutName" type="text" placeholder="Gmail" />
           </label>
           <label>
-            URL
-            <input id="managerShortcutUrl" type="text" inputmode="url" required />
+            Destination URL
+            <input id="managerShortcutUrl" type="text" inputmode="url" placeholder="https://mail.google.com" required />
           </label>
           <label>
             Icon URL (optional)
             <input id="managerShortcutIconUrl" type="text" inputmode="url" placeholder="https://.../icon.png" />
           </label>
         </form>
+        <p class="manager-shortcuts-hint">Leave icon URL empty to use an automatic site favicon.</p>
         <ul id="managerShortcutList" class="manager-list" aria-label="Managed shortcuts"></ul>
         <div class="manager-view-footer">
-          <button id="managerShortcutSaveBtn" type="submit" form="managerShortcutForm">Save</button>
+          <button id="managerShortcutSaveBtn" type="submit" form="managerShortcutForm">Save Quick Link</button>
         </div>
       </section>
       <section id="managerPreferencesView" class="manager-view manager-backup-view" hidden>
-        <div class="manager-settings">
-          <label class="manager-setting-item">
-            <input id="managerShowHintToggle" type="checkbox" />
-            <span>Show search hint under search bar</span>
-          </label>
-          <label class="manager-setting-item">
-            <input id="managerShowShortcutsToggle" type="checkbox" />
-            <span>Show mouse shortcuts below search</span>
-          </label>
-          <label class="manager-setting-field" for="managerMinCharsInput">
-            <span>Minimum characters before search starts</span>
-            <input id="managerMinCharsInput" type="number" min="1" max="10" step="1" value="3" />
-          </label>
-          <p class="manager-setting-note">Suggested value: 3</p>
-          <p class="manager-setting-note">
-            Recommendation: lowering this value can negatively affect performance.
+        <div class="manager-preferences-header">
+          <h3>Experience and Behavior</h3>
+          <p class="manager-backup-copy">
+            Control how Beam behaves while you search and navigate, including helper visibility and search sensitivity.
           </p>
+        </div>
+        <div class="manager-preferences-grid">
+          <label class="manager-preference-card">
+            <span class="manager-preference-card-main">
+              <span class="manager-preference-title">Auto Fallback to Web Search</span>
+              <span class="manager-preference-copy">When no app matches, automatically show enabled web search providers in results.</span>
+            </span>
+            <span class="manager-preference-toggle">
+              <input id="managerAutoSearchFallbackToggle" type="checkbox" />
+              <span>Enable fallback</span>
+            </span>
+          </label>
+          <label class="manager-preference-card">
+            <span class="manager-preference-card-main">
+              <span class="manager-preference-title">Search Hint</span>
+              <span class="manager-preference-copy">Show helper guidance under the search bar while typing.</span>
+            </span>
+            <span class="manager-preference-toggle">
+              <input id="managerShowHintToggle" type="checkbox" />
+              <span>Show hint</span>
+            </span>
+          </label>
+          <label class="manager-preference-card">
+            <span class="manager-preference-card-main">
+              <span class="manager-preference-title">Mouse Shortcuts</span>
+              <span class="manager-preference-copy">Display your quick-launch shortcut row under the search area.</span>
+            </span>
+            <span class="manager-preference-toggle">
+              <input id="managerShowShortcutsToggle" type="checkbox" />
+              <span>Show shortcuts</span>
+            </span>
+          </label>
+          <article class="manager-preference-card manager-preference-card-wide">
+            <span class="manager-preference-card-main">
+              <span class="manager-preference-title">Search Trigger Threshold</span>
+              <span class="manager-preference-copy">Set how many characters are required before Beam shows search results.</span>
+            </span>
+            <label class="manager-setting-field" for="managerMinCharsInput">
+              <span>Minimum characters before search starts</span>
+              <input id="managerMinCharsInput" type="number" min="1" max="10" step="1" value="3" />
+            </label>
+            <p class="manager-setting-note">Suggested value: 3</p>
+            <p class="manager-setting-note">Lower values can reduce search performance on larger app lists.</p>
+          </article>
         </div>
       </section>
       <section id="managerSearchView" class="manager-view manager-backup-view" hidden>
-        <div class="manager-settings">
-          <label class="manager-setting-item manager-setting-item-service">
-            <input id="managerShowGoogleSearchToggle" type="checkbox" />
-            <span class="manager-setting-service-label">
-              <img
-                class="manager-setting-service-icon"
-                src="https://www.google.com/favicon.ico"
-                alt=""
-                width="16"
-                height="16"
-                loading="lazy"
-              />
-              <span>Show Google search result section</span>
+        <div class="manager-search-header">
+          <h3>Web Search Providers</h3>
+          <p class="manager-backup-copy">
+            Choose which web search providers appear in launcher results when your query has no direct app match.
+          </p>
+        </div>
+        <div class="manager-search-grid">
+          <label class="manager-search-card">
+            <span class="manager-search-card-main">
+              <span class="manager-setting-service-label">
+                <img
+                  class="manager-setting-service-icon"
+                  src="https://www.google.com/favicon.ico"
+                  alt=""
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                />
+                <span class="manager-search-service-title">Google Search</span>
+              </span>
+              <span class="manager-search-service-copy">Adds a Google option at the bottom of your results list.</span>
+            </span>
+            <span class="manager-search-card-toggle">
+              <input id="managerShowGoogleSearchToggle" type="checkbox" />
+              <span>Show in results</span>
             </span>
           </label>
-          <label class="manager-setting-item manager-setting-item-service">
-            <input id="managerShowChatGptSearchToggle" type="checkbox" />
-            <span class="manager-setting-service-label">
-              <img
-                class="manager-setting-service-icon"
-                src="https://chatgpt.com/favicon.ico"
-                alt=""
-                width="16"
-                height="16"
-                loading="lazy"
-              />
-              <span>Show ChatGPT search result section</span>
+          <label class="manager-search-card">
+            <span class="manager-search-card-main">
+              <span class="manager-setting-service-label">
+                <img
+                  class="manager-setting-service-icon"
+                  src="https://chatgpt.com/favicon.ico"
+                  alt=""
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                />
+                <span class="manager-search-service-title">ChatGPT</span>
+              </span>
+              <span class="manager-search-service-copy">Adds an Ask ChatGPT option using your current query text.</span>
+            </span>
+            <span class="manager-search-card-toggle">
+              <input id="managerShowChatGptSearchToggle" type="checkbox" />
+              <span>Show in results</span>
+            </span>
+          </label>
+          <label class="manager-search-card">
+            <span class="manager-search-card-main">
+              <span class="manager-setting-service-label">
+                <img
+                  class="manager-setting-service-icon"
+                  src="https://www.youtube.com/favicon.ico"
+                  alt=""
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                />
+                <span class="manager-search-service-title">YouTube</span>
+              </span>
+              <span class="manager-search-service-copy">Adds a YouTube option using your current query text.</span>
+            </span>
+            <span class="manager-search-card-toggle">
+              <input id="managerShowYouTubeSearchToggle" type="checkbox" />
+              <span>Show in results</span>
             </span>
           </label>
         </div>
+        <p class="manager-search-note">Tip: press <kbd>Tab</kbd> on an empty search box to jump into quick web search results.</p>
       </section>
       <section id="managerBackupView" class="manager-view manager-backup-view" hidden>
-        <p class="manager-backup-copy">Export your local setup to JSON, or import/restore it later.</p>
-        <div class="manager-actions manager-backup-actions">
-          <button id="managerExportBtn" type="button">Export JSON</button>
-          <button id="managerImportBtn" type="button">Import JSON</button>
-          <button id="managerImportChromeBookmarksBtn" type="button">Import Chrome Bookmarks</button>
-          <button id="managerResetBtn" type="button">Reset local changes</button>
+        <div class="manager-backup-header">
+          <h3>Backup and Restore</h3>
+          <p class="manager-backup-copy">
+            Manage your local Beam setup. Export a backup, restore from JSON, import from Chrome, or reset to defaults.
+          </p>
+        </div>
+        <div class="manager-backup-grid">
+          <article class="manager-backup-card">
+            <h4>Partial Import from JSON</h4>
+            <p>Keep your current setup and add only new apps from a JSON file.</p>
+            <div class="manager-actions manager-backup-actions">
+              <button id="managerPartialImportBtn" type="button">Import New Apps (.json)</button>
+            </div>
+          </article>
+          <article class="manager-backup-card">
+            <h4>Import from Chrome</h4>
+            <p>Bring in bookmarks as apps. You can grant permission when prompted.</p>
+            <div class="manager-actions manager-backup-actions">
+              <button id="managerImportChromeBookmarksBtn" type="button">Import from Chrome Bookmarks</button>
+            </div>
+          </article>
+          <article class="manager-backup-card">
+            <h4>Export</h4>
+            <p>Download your current setup as a JSON file.</p>
+            <div class="manager-actions manager-backup-actions">
+              <button id="managerExportBtn" type="button">Download Backup (.json)</button>
+            </div>
+          </article>
+          <article class="manager-backup-card">
+            <h4>Restore from JSON</h4>
+            <p>Replace your current local setup with a backup file.</p>
+            <div class="manager-actions manager-backup-actions">
+              <button id="managerImportBtn" type="button">Restore Backup (.json)</button>
+            </div>
+          </article>
+          <article class="manager-backup-card manager-backup-card-danger">
+            <h4>Reset</h4>
+            <p>Clear local changes and go back to your default setup.</p>
+            <div class="manager-actions manager-backup-actions">
+              <button id="managerResetBtn" type="button">Reset Local Changes</button>
+            </div>
+          </article>
         </div>
       </section>
       <input id="managerImportInput" type="file" accept="application/json,.json" hidden />
+      <input id="managerPartialImportInput" type="file" accept="application/json,.json" hidden />
       <input id="managerImportChromeBookmarksInput" type="file" accept="text/html,.html,.htm,application/json,.json" hidden />
     </section>
   </div>
@@ -208,7 +340,6 @@
   </section>
 
   <script src="./config.js"></script>
-  <script src="./apps.js"></script>
   <script src="./main.js"></script>
 </body>
 </html>

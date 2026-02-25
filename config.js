@@ -12,6 +12,7 @@ window.SPOTLIGHT_CONFIG = {
   mouseShortcuts: [],
   showEnterHintByDefault: false,
   showShortcutsByDefault: true,
+  showQuickEditButtonByDefault: true,
   lightThemeEasterEggs: [
     "./assets/easter-eggs/light-theme-1.png"
   ],

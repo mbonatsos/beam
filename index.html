@@ -103,12 +103,12 @@
             Base URL
             <input id="managerUrl" type="text" inputmode="url" placeholder="https://your-app.example.com" required />
           </label>
-          <label>
-            Tags (comma separated)
-            <input id="managerTags" type="text" placeholder="billing, production, internal" />
-          </label>
-          <button id="managerActionToggleBtn" type="button" class="manager-option-toggle" aria-expanded="false">Show action mode options</button>
+          <button id="managerActionToggleBtn" type="button" class="manager-option-toggle" aria-expanded="false">Additional options</button>
           <div id="managerActionSection" hidden>
+            <label>
+              Tags (comma separated)
+              <input id="managerTags" type="text" placeholder="billing, production, internal" />
+            </label>
             <label>
               Action mode URL suffix (optional)
               <input id="managerAppendUrl" type="text" placeholder="/customers/{customerid}" />
@@ -117,6 +117,18 @@
           </div>
         </form>
         <p class="manager-apps-hint">Need to add many apps quickly? Use Data > Import from Chrome.</p>
+        <div class="manager-apps-filter">
+          <label for="managerAppSearchInput">Find an app</label>
+          <input
+            id="managerAppSearchInput"
+            type="search"
+            placeholder="Search by name, URL, or tag"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search managed apps"
+          />
+          <p id="managerAppSearchMeta" class="manager-apps-filter-meta" aria-live="polite"></p>
+        </div>
         <ul id="managerList" class="manager-list" aria-label="Managed apps"></ul>
         <div class="manager-view-footer">
           <button id="managerSaveBtn" type="submit" form="managerForm">Save App</button>
@@ -187,6 +199,16 @@
             <span class="manager-preference-toggle">
               <input id="managerShowShortcutsToggle" type="checkbox" />
               <span>Show shortcuts</span>
+            </span>
+          </label>
+          <label class="manager-preference-card">
+            <span class="manager-preference-card-main">
+              <span class="manager-preference-title">Quick Edit Button</span>
+              <span class="manager-preference-copy">Show the mouse-only Quick edit button on each app result row.</span>
+            </span>
+            <span class="manager-preference-toggle">
+              <input id="managerShowQuickEditButtonToggle" type="checkbox" />
+              <span>Show Quick edit button</span>
             </span>
           </label>
           <article class="manager-preference-card manager-preference-card-wide">
@@ -322,6 +344,38 @@
       <input id="managerImportInput" type="file" accept="application/json,.json" hidden />
       <input id="managerPartialImportInput" type="file" accept="application/json,.json" hidden />
       <input id="managerImportChromeBookmarksInput" type="file" accept="text/html,.html,.htm,application/json,.json" hidden />
+    </section>
+  </div>
+  <div id="quickEditOverlay" class="quick-edit-overlay" hidden>
+    <section class="quick-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="quickEditTitle">
+      <header class="quick-edit-header">
+        <h3 id="quickEditTitle">Quick edit</h3>
+        <p id="quickEditSubtitle" class="quick-edit-copy">Edit this app only.</p>
+      </header>
+      <form id="quickEditForm" class="quick-edit-form">
+        <input id="quickEditIndex" type="hidden" value="" />
+        <label>
+          App name
+          <input id="quickEditName" type="text" placeholder="Jira" required />
+        </label>
+        <label>
+          Base URL
+          <input id="quickEditUrl" type="text" inputmode="url" placeholder="https://your-app.example.com" required />
+        </label>
+        <label>
+          Tags (comma separated)
+          <input id="quickEditTags" type="text" placeholder="billing, production, internal" />
+        </label>
+        <label>
+          Action mode URL suffix (optional)
+          <input id="quickEditAppendUrl" type="text" placeholder="/customers/{customerid}" />
+        </label>
+        <p class="quick-edit-hint">Use `{customerid}` style placeholders to append dynamic values from search input.</p>
+        <div class="quick-edit-actions">
+          <button id="quickEditCancelBtn" type="button">Cancel</button>
+          <button id="quickEditSaveBtn" type="submit">Save changes</button>
+        </div>
+      </form>
     </section>
   </div>
   <div id="bookmarkDialogOverlay" class="bookmark-dialog-overlay" hidden>
